@@ -1,19 +1,27 @@
 <#
+Clones a repo within the $personalGitUserName (set within the PS $Profile)
+
+Future enhancements:
+    - Change this to Clone-Repo.ps1 and make it automatically use a validate set of the list of all repos within the desired $GitUserName
+    (would require Git Api, rest calls, or Git Powershell to accomplish)
 #>
 Param
 (
     [parameter(Position = 0, Mandatory = $true)][string]$RepoName,
-    [parameter(Position = 1)][string]$GitUserName = 'loganwilson1'
+    [parameter(Position = 1)][string]$GitUserName = ''
 )
 
-if ($personalGitUserName -eq $null) {
-    Write-Host "You need to add the `$personalGitUserName variable to your Microsoft.Powershell_Profile.ps1 file."
-    break
+if ($GitUserName -eq '') {
+    if ($null -eq $personalGitUserName) {
+        Write-Host "You need to add the `$personalGitUserName variable to your Microsoft.Powershell_Profile.ps1 file."
+        break
+    } else {
+        $GitUserName = $personalGitUserName
+    }
 }
+
 
 Set-Location C:/projects
 git clone https://github.com/$personalGitUserName/$RepoName
 Set-Location $RepoName
-git remote -v 
-
-#Set-Alias -Name newrepo -Value New-Repo
+git remote -v
