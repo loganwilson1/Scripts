@@ -28,21 +28,33 @@ Prerequisite   : Windows PowerShell
 Copyright 2023 - Logan Wilson
 #>
 
+# TODO: This is a work in progress. The actual script I need should set the WindowsInstaller option, not the AlwaysInstallElevated option.
+# Also, this script does not correclty set the initial registry values when the Policy Path does not exist. 
+
 #Requires -Version 7
 param (
     [ValidateSet("NotConfigured", "Enabled", "Disabled")]
     [string]$PolicySetting = "NotConfigured"
 )
 
+$PolicySetting = "Enabled"
+
+$PolicyPath = "HKLM:\Software\Policies\Microsoft\Windows\Installer"
+# TODO: Use the correct Policy Name
+$PolicyName = "AlwaysInstallElevated"
+
 # Function to modify the Windows Installer policy
 Function Set-WindowsInstallerPolicy {
     param (
         [string]$PolicySetting
     )
-    
-    $PolicyPath = "HKLM:\Software\Policies\Microsoft\Windows\Installer"
-    $PolicyName = "AlwaysInstallElevated"
 
+    # Check if the policy path exists, and create it if it doesn't
+    if (!(Test-Path $PolicyPath)) {
+        # TODO: This isn't quite correct. Need to properly setup the Registry value 
+        New-Item -Path $PolicyPath -Force
+    }
+    
     switch ($PolicySetting) {
         "Enabled" {
             Write-Host "Setting 'Always install with elevated permissions' to Enabled."
@@ -63,19 +75,25 @@ Function Test-WindowsInstallerPolicy {
     $result = (Get-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Windows\Installer" -Name "AlwaysInstallElevated" -ErrorAction SilentlyContinue)
     switch ($result.AlwaysInstallElevated ) {
         0 { 
-            ($PolicySetting -eq "Disabled") 
-                ? Invoke-PolicySettingModifiedSuccessfully
-                : Invoke-PolicySettingModifiedFailure
+            switch ($PolicySetting -eq "Disabled") { 
+                $true { Invoke-PolicySettingModifiedSuccessfully }
+                $false { Invoke-PolicySettingModifiedFailure }
+                default {break}
+            }
         }
         1 { 
-            ($PolicySetting -eq "Enabled")
-                ? Invoke-PolicySettingModifiedSuccessfully
-                : Invoke-PolicySettingModifiedFailure
+            switch ($PolicySetting -eq "Enabled") {
+                $true {Invoke-PolicySettingModifiedSuccessfully}
+                $false {Invoke-PolicySettingModifiedFailure}
+                default {break}
+            }
         }
         default {
-            ($PolicySetting -eq "NotConfigured")
-                ? Invoke-PolicySettingModifiedSuccessfully
-                : Invoke-PolicySettingModifiedFailure
+            switch ($PolicySetting -eq "NotConfigured") {
+                $true {Invoke-PolicySettingModifiedSuccessfully}
+                $false {Invoke-PolicySettingModifiedFailure}
+                default {break}
+            }
         }
     }
 }
