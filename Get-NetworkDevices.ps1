@@ -1,7 +1,7 @@
 # ## Q:\Test\2017\01\21\SO_41785413.ps1
 # $FileOut = ".\Computers.csv"
 ## Ping subnet
-$Subnet = "192.168.0."
+$Subnet = "192.168.86."
 1..254|ForEach-Object{
     Start-Process -WindowStyle Hidden ping.exe -Argumentlist "-n 1 -l 0 -f -i 2 -w 1 -4 $SubNet$_"
 }
