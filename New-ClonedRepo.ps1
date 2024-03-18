@@ -2,7 +2,7 @@
 Clones a repo within the $personalGitUserName (set within the PS $Profile)
 
 Future enhancements:
-    - Change this to Clone-Repo.ps1 and make it automatically use a validate set of the list of all repos within the desired $GitUserName
+    - Make it automatically use a validate set of the list of all repos within the desired $GitUserName
     (would require Git Api, rest calls, or Git Powershell to accomplish)
 #>
 Param
