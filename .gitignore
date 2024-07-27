@@ -1,0 +1,4 @@
+#ignore specific files produced by some scripts
+WaitTimes-Today.csv
+WaitTimes-Archive.csv
+WaitTimesLastUpdated.csv

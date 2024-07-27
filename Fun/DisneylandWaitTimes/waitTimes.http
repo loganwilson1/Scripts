@@ -1,0 +1,16 @@
+##### Disneyland wait times
+
+#### Variables
+@server = https://queue-times.com
+
+### List parks
+GET {{server}}/parks.json
+
+## Park Ids
+# Disneyland = 16
+# California Adventure = 17
+# Walt Disney Attractions = 2 
+@parkId = 16
+
+### List wait times for park
+GET {{server}}/parks/{{parkId}}/queue_times.json
