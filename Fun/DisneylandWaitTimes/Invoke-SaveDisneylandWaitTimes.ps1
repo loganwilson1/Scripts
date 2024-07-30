@@ -5,6 +5,7 @@
     - Save the records to an ongoing CSV
 
 #>
+$taskRunTime = Get-Date
 $waitTimesServer = "https://queue-times.com"
 $desiredParkNames = @(
     "Disneyland", 
@@ -138,6 +139,7 @@ filter Get-RestructuredWaitTimes() {
                     IsOpen = $ride.is_open;
                     WaitTime = $ride.wait_time;
                     LastUpdated = Convert-UtcToPacificDateTime($ride.last_updated)
+                    TaskRunTime = $taskRunTime
                 }
                 $restructuredRidesList += $restructuredRide
             }
